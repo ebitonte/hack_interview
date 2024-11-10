@@ -4,10 +4,11 @@ import soundcard as sc
 import soundfile as sf
 from loguru import logger
 
-from src.constants import OUTPUT_FILE_NAME, RECORD_SEC, SAMPLE_RATE
+from constants import OUTPUT_FILE_NAME, RECORD_SEC, SAMPLE_RATE
 
-SPEAKER_ID = str(sc.default_speaker().name)
-
+print(sc.all_microphones())
+logger.debug(sc.all_speakers())
+SPEAKER_ID = "BlackHole 2ch"
 
 def record_batch(record_sec: int = RECORD_SEC) -> np.ndarray:
     """
@@ -26,12 +27,9 @@ def record_batch(record_sec: int = RECORD_SEC) -> np.ndarray:
         ```
     """
     logger.debug("Recording for {record_sec} second(s)...")
-    with sc.get_microphone(
-        id=SPEAKER_ID,
-        include_loopback=True,
-    ).recorder(samplerate=SAMPLE_RATE) as mic:
-        audio_sample = mic.record(numframes=SAMPLE_RATE * record_sec)
-    return audio_sample
+    logger.debug("Using speaker {SPEAKER_ID}")
+
+    return sc.get_microphone("BlackHole").record(samplerate=SAMPLE_RATE, numframes=SAMPLE_RATE)
 
 
 def save_audio_file(audio_data: np.ndarray, output_file_name: str = OUTPUT_FILE_NAME) -> None:

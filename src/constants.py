@@ -1,7 +1,7 @@
 INTERVIEW_POSTION = "python developer"
 OPENAI_API_KEY = ""
 
-OUTPUT_FILE_NAME = "out.wav"  # audio file name.
+OUTPUT_FILE_NAME = "out.mp3"  # audio file name.
 
 SAMPLE_RATE = 48000  # [Hz]. sampling rate.
 RECORD_SEC = 1  # [sec]. duration recording audio.

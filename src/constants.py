@@ -1,4 +1,3 @@
-INTERVIEW_POSTION = "python developer"
 OPENAI_API_KEY = ""
 DEEPGRAM_API_KEY = ""
 

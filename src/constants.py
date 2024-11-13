@@ -1,5 +1,6 @@
 INTERVIEW_POSTION = "python developer"
 OPENAI_API_KEY = ""
+DEEPGRAM_API_KEY = ""
 
 OUTPUT_FILE_NAME = "out.wav"  # audio file name.
 

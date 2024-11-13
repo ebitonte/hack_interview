@@ -1,12 +1,14 @@
-import openai
 from openai import OpenAI
 from loguru import logger
+from deepgram import DeepgramClient, PrerecordedOptions
 
-from constants import INTERVIEW_POSTION, OPENAI_API_KEY, OUTPUT_FILE_NAME
+from constants import INTERVIEW_POSTION, OPENAI_API_KEY, OUTPUT_FILE_NAME, DEEPGRAM_API_KEY
 
 client = OpenAI(
     api_key=OPENAI_API_KEY
 )
+
+deepgram = DeepgramClient(DEEPGRAM_API_KEY)
 
 SYSTEM_PROMPT = f"""You are interviewing for a {INTERVIEW_POSTION} position.
 You will receive an audio transcription of the question. It may not be complete. You need to understand the question and write an answer to it.\n
@@ -30,12 +32,28 @@ def transcribe_audio(path_to_file: str = OUTPUT_FILE_NAME) -> str:
     Raises:
         Exception: If the audio file fails to transcribe.
     """
-    with open(path_to_file, "rb") as audio_file:
-        try:
-            transcript = client.audio.transcriptions.create(model="whisper-1", file=audio_file, response_format="text")
-        except Exception as error:
-            logger.error(f"Can't transcribe audio: {error}")
-            raise error
+    
+    
+    try:
+        with open(path_to_file, "rb") as audio_file:
+            buffer_data = audio_file.read()
+
+        options = PrerecordedOptions(
+            model="nova-2",
+            language="en",
+            smart_format=True,
+        )
+
+        payload = {
+            "buffer": buffer_data,
+        }
+
+        response = deepgram.listen.rest.v("1").transcribe_file(payload, options)
+        transcript = response.results.channels[0].alternatives[0].transcript
+    except Exception as error:
+        logger.error(f"Can't transcribe audio: {error}")
+        raise error
+        
     return transcript
 
 

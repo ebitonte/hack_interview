@@ -1,6 +1,8 @@
 import numpy as np
 import PySimpleGUI as sg
 from loguru import logger
+import threading
+import queue
 
 import audio
 import llm
@@ -60,18 +62,19 @@ WINDOW = sg.Window("Keyboard Test", layout, return_keyboard_events=True, use_def
 
 
 def background_recording_loop() -> None:
-    audio_data = None
+    recorder = audio.AudioRecorder(queue.Queue())
+
+    recorder.start()
+
     while record_status_button.metadata.state:
-        audio_sample = audio.record_batch()
-        if audio_data is None:
-            audio_data = audio_sample
-        else:
-            audio_data = np.vstack((audio_data, audio_sample))
-    audio.save_audio_file(audio_data)
+        continue
+
+    recorder.stop()
 
 
 while True:
     event, values = WINDOW.read()
+
     if event in ["Cancel", sg.WIN_CLOSED]:
         logger.debug("Closing...")
         break

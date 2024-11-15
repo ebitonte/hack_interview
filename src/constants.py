@@ -1,6 +1,8 @@
 OPENAI_API_KEY = ""
 DEEPGRAM_API_KEY = ""
 
+LOOPBACK_DEVICE = "BlackHole"
+
 OUTPUT_FILE_NAME = "out.wav"  # audio file name.
 
 SAMPLE_RATE = 44100  # [Hz]. sampling rate.

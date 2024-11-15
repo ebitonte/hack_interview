@@ -4,19 +4,19 @@ import sounddevice as sd
 import soundfile as sf
 from loguru import logger
 
-from constants import OUTPUT_FILE_NAME, RECORD_SEC, SAMPLE_RATE
+from constants import OUTPUT_FILE_NAME, LOOPBACK_DEVICE, SAMPLE_RATE
 
 sd.default.samplerate = SAMPLE_RATE
 sd.default.channels = 2
-sd.default.device = 1
-
-print(sd.query_devices())
-
+sd.default.device = LOOPBACK_DEVICE
 class AudioRecorder:
     def __init__(self, audio_q):
         self.stream = None
         self.audio_q = audio_q
         self.recording = False
+
+        if sd.query_devices(device=LOOPBACK_DEVICE) is None:
+            raise Exception("This app requires a {LOOPBACK_DEVICE} loopback virtual audio device to be properly installed. https://github.com/ExistentialAudio/BlackHole")
 
     def audio_callback(self, indata, frames, time, status):
         if self.recording:
@@ -27,7 +27,7 @@ class AudioRecorder:
     def create_audio_stream(self):
         if self.stream is not None:
             self.stream.close()
-        self.stream = sd.InputStream(device=1, channels=2, callback=self.audio_callback)
+        self.stream = sd.InputStream(callback=self.audio_callback)
         self.stream.start()
 
     def start(self):

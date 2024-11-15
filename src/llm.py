@@ -2,7 +2,7 @@ from openai import OpenAI
 from loguru import logger
 from deepgram import DeepgramClient, PrerecordedOptions
 
-from constants import INTERVIEW_POSTION, OPENAI_API_KEY, OUTPUT_FILE_NAME, DEEPGRAM_API_KEY
+from constants import OPENAI_API_KEY, OUTPUT_FILE_NAME, DEEPGRAM_API_KEY
 
 client = OpenAI(
     api_key=OPENAI_API_KEY

@@ -15,8 +15,12 @@ class AudioRecorder:
         self.audio_q = audio_q
         self.recording = False
 
-        if sd.query_devices(device=LOOPBACK_DEVICE) is None:
-            raise Exception("This app requires a {LOOPBACK_DEVICE} loopback virtual audio device to be properly installed. https://github.com/ExistentialAudio/BlackHole")
+        try:
+            sd.query_devices(device=LOOPBACK_DEVICE)
+        except:
+            devices = sd.query_devices()
+            logger.error("This app requires a {device} virtual audio device to be properly installed.".format(device=LOOPBACK_DEVICE))
+            logger.error("Device not found. Are any of these correct? {devices}".format(devices=devices))
 
     def audio_callback(self, indata, frames, time, status):
         if self.recording:
